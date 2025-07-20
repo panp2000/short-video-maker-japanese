@@ -9,6 +9,22 @@ services:
       - .env
     environment:
       - DEV=false
+      - VOICEVOX_URL=http://voicevox-engine:50021
     ports:
       - "3123:3123"
     entrypoint: ["node", "dist/index.js"]
+    depends_on:
+      - voicevox-engine
+    networks:
+      - app-network
+
+  voicevox-engine:
+    image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+    networks:
+      - app-network
+    ports:
+      - "50021:50021"
+
+networks:
+  app-network:
+    driver: bridge

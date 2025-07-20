@@ -1,28 +1,29 @@
 import { OrientationEnum } from "./../types/shorts";
+import { createJapaneseCaptions } from "./libraries/create-japanese-captions";
 /* eslint-disable @remotion/deterministic-randomness */
-import fs from "fs-extra";
 import cuid from "cuid";
-import path from "path";
-import https from "https";
+import fs from "fs-extra";
 import http from "http";
+import https from "https";
+import path from "path";
 
-import { Kokoro } from "./libraries/Kokoro";
-import { Remotion } from "./libraries/Remotion";
-import { Whisper } from "./libraries/Whisper";
-import { FFMpeg } from "./libraries/FFmpeg";
-import { PexelsAPI } from "./libraries/Pexels";
 import { Config } from "../config";
 import { logger } from "../logger";
-import { MusicManager } from "./music";
 import type {
-  SceneInput,
-  RenderConfig,
-  Scene,
-  VideoStatus,
+  MusicForVideo,
   MusicMoodEnum,
   MusicTag,
-  MusicForVideo,
+  RenderConfig,
+  Scene,
+  SceneInput,
+  VideoStatus,
 } from "../types/shorts";
+import { FFMpeg } from "./libraries/FFmpeg";
+import { Kokoro } from "./libraries/Kokoro";
+import { PexelsAPI } from "./libraries/Pexels";
+import { Remotion } from "./libraries/Remotion";
+import { Whisper } from "./libraries/Whisper";
+import { MusicManager } from "./music";
 
 export class ShortCreator {
   private queue: {
@@ -134,7 +135,16 @@ export class ShortCreator {
       tempFiles.push(tempWavPath, tempMp3Path);
 
       await this.ffmpeg.saveNormalizedAudio(audioStream, tempWavPath);
-      const captions = await this.whisper.CreateCaption(tempWavPath);
+      // 日本語の場合は元のテキストから字幕を生成
+      const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(scene.text);
+      let captions;
+
+      if (hasJapanese) {
+        logger.debug({ text: scene.text, audioLength }, "Creating Japanese captions from text");
+        captions = createJapaneseCaptions(scene.text, audioLength);
+      } else {
+        captions = await this.whisper.CreateCaption(tempWavPath);
+      }
 
       await this.ffmpeg.saveToMp3(audioStream, tempMp3Path);
       const video = await this.pexelsApi.findVideo(

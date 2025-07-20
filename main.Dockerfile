@@ -44,6 +44,9 @@ RUN apt install -y \
       libpango-1.0-0 \
       libcairo2 \
       libcups2 \
+      # 日本語フォント
+      fonts-noto-cjk \
+      fonts-noto-cjk-extra \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 # setup pnpm

@@ -1,0 +1,15 @@
+// PortraitVideo.tsxの修正箇所メモ
+
+// 1. インポート部分を変更
+// 元：
+import { loadFont } from "@remotion/google-fonts/BarlowCondensed";
+
+// 変更後：
+import { getFontFamily } from "./font-config";
+
+// 2. フォント定義を削除
+// 削除：
+const { fontFamily } = loadFont(); // "Barlow Condensed"
+
+// 3. 字幕レンダリング部分でフォントを動的に選択
+// CaptionPageコンポーネント内で、fontFamilyを動的に設定する必要がある

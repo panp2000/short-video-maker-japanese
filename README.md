@@ -1,3 +1,28 @@
+# Short Video Maker - 日本語対応版
+
+このプロジェクトは[gyoridavid/short-video-maker](https://github.com/gyoridavid/short-video-maker)をフォークし、日本語音声生成機能を追加したものです。
+
+## 🎌 日本語対応機能
+
+- **VOICEVOX統合**: 高品質な日本語音声生成
+- **自動言語判定**: 日本語テキストを自動検出してVOICEVOXを使用
+- **日本語字幕**: 適切なフォントと自然なタイミングで表示
+- **複数話者対応**: ずんだもん、四国めたんなど（今後拡張予定）
+
+### 使用例
+
+```json
+{
+  "scenes": [{
+    "text": "こんにちは、これは日本語のテストです。",
+    "searchTerms": ["ocean", "wave"]
+  }],
+  "config": {
+    "paddingBack": 1500
+  }
+}
+```
+
 ## [📚 Join our Skool community for support, premium content and more!](https://www.skool.com/ai-agents-az/about?s1m)
 
 ### Be part of a growing community and help us create more content like this

@@ -1,0 +1,21 @@
+// src/short-creator/ShortCreator-patch.ts
+// ShortCreator.tsに追加する修正箇所のみ
+
+// 1. インポートに追加
+import { createJapaneseCaptions } from "./libraries/create-japanese-captions";
+
+// 2. createShortメソッド内の字幕生成部分を修正
+// 以下の行を探す：
+// const captions = await this.whisper.CreateCaption(tempWavPath);
+
+// これを以下に置き換える：
+      // 日本語の場合は元のテキストから字幕を生成
+      const hasJapanese = /[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9faf]/.test(scene.text);
+      let captions;
+      
+      if (hasJapanese) {
+        logger.debug({ text: scene.text, audioLength }, "Creating Japanese captions from text");
+        captions = createJapaneseCaptions(scene.text, audioLength);
+      } else {
+        captions = await this.whisper.CreateCaption(tempWavPath);
+      }
