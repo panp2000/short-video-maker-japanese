@@ -23,6 +23,43 @@
 }
 ```
 
+## 🐳 Dockerで使用
+
+```bash
+# VOICEVOXと一緒に起動
+docker run -d --name voicevox-engine \
+  -p 50021:50021 \
+  voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+
+docker run -d --name short-video-maker \
+  -p 3123:3123 \
+  -e PEXELS_API_KEY=[your_api_key] \
+  -e VOICEVOX_URL=http://voicevox-engine:50021 \
+  --link voicevox-engine \
+  panp2000/short-video-maker-japanese:latest
+```
+
+## n8nでの使用
+
+docker-compose.yml:
+```yaml
+services:
+  n8n:
+    image: n8nio/n8n
+    # ... n8n設定 ...
+
+  short-video-maker:
+    image: yourusername/short-video-maker-japanese:latest
+    environment:
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
+      - VOICEVOX_URL=http://voicevox-engine:50021
+    depends_on:
+      - voicevox-engine
+
+  voicevox-engine:
+    image: voicevox/voicevox_engine:cpu-ubuntu20.04-latest
+```
+
 ## [📚 Join our Skool community for support, premium content and more!](https://www.skool.com/ai-agents-az/about?s1m)
 
 ### Be part of a growing community and help us create more content like this
